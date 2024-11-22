@@ -35,42 +35,13 @@ async function generateReport(env) {
 export default {
 	// HTTP handler for manual triggers
 	async fetch(request, env, ctx) {
-		try {
-			const result = await generateReport(env);
-
-			return new Response(
-				JSON.stringify({
-					message: 'Report generated and sent successfully',
-					...result,
-				}),
-				{
-					status: 200,
-					headers: { 'Content-Type': 'application/json' },
-				}
-			);
-		} catch (error) {
-			console.error('Error in worker:', error);
-
-			return new Response(
-				JSON.stringify({
-					error: error.message || 'Internal server error',
-					timestamp: new Date().toISOString(),
-				}),
-				{
-					status: error.status || 500,
-					headers: { 'Content-Type': 'application/json' },
-				}
-			);
-		}
+		const result = await generateReport(env);
+    console.log(result)
+		return new Response();
 	},
 
 	// Scheduled handler for cron job
 	async scheduled(event, env, ctx) {
-		try {
-			// Direct call to generateReport instead of using fetch()
-			await generateReport(env);
-		} catch (error) {
-			console.error('Error in scheduled job:', error);
-		}
+		ctx.waitUntil(generateReport(env));
 	},
 };
