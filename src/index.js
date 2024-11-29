@@ -15,7 +15,7 @@ async function generateReport(env) {
 	const formData = await getFormSubmissions(env.HUBSPOT_API_KEY, env.FORM_GUID);
 
 	// Validate response data
-	if (!formData || !Array.isArray(formData.results)) {
+	if (!formData || !Array.isArray(formData)) {
 		throw new Error('Invalid response from HubSpot API');
 	}
 
